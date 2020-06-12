@@ -480,10 +480,14 @@ export class Game extends React.PureComponent<GameProperties, any> {
 
                 if (count_direction_computed === 'up') {
                     if (seconds < every_second_start) {
-                        this.goban.setByoYomiLabel((every_second_start - seconds).toString());
+ 						if (false) { //TODO: implement state to display or not this user preference
+                            this.goban.setByoYomiLabel((every_second_start - seconds).toString());
+						}
                     }
                 } else {
-                    this.goban.setByoYomiLabel(seconds.toString());
+ 				    if (false) { //TODO: implement state to display or not this user preference
+                        this.goban.setByoYomiLabel(seconds.toString());
+                    }
                 }
             } else {
                 this.goban.setByoYomiLabel(null);
@@ -3060,6 +3064,7 @@ export class Game extends React.PureComponent<GameProperties, any> {
 
                 <a onClick={this.toggleZenMode}><i className="ogs-zen-mode"></i> {_("Zen mode")}</a>
                 <a onClick={this.toggleCoordinates}><i className="ogs-coordinates"></i> {_("Toggle coordinates")}</a>
+                <a onClick={this.toggleCoordinates}><i className="ogs-latewarn"></i> {_("Clock Warning Mode")}</a>
                 {game &&
                     <a onClick={this.toggleAIReview}>
                         <i className="fa fa-desktop"></i> {this.state.ai_review_enabled ? _("Disable AI review") : _("Enable AI review")}

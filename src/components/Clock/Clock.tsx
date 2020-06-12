@@ -24,6 +24,7 @@ type clock_color = 'black' | 'white' | 'stone-removal';
 
 let ct = 0;
 
+let flash = false;
 
 export function Clock({goban, color, className, compact}:{goban:Goban, color:clock_color, className?:string, compact?:boolean}):JSX.Element {
     const [clock, setClock]:[JGOFClock, (x:JGOFClock) => void] = useState(null);
@@ -45,14 +46,27 @@ export function Clock({goban, color, className, compact}:{goban:Goban, color:clo
     }
 
     const time_control:JGOFTimeControl = goban.engine.time_control;
-
+    
     if (color === 'stone-removal') {
         return <span> ({prettyTime(clock.stone_removal_time_left)})</span>;
     } else {
+       
+       
         let player_clock:JGOFPlayerClock = color === 'black' ? clock.black_clock : clock.white_clock;
         let player_id:number = color === 'black' ? goban.engine.players.black.id : goban.engine.players.white.id;
 
+        let period_sec_left = Math.round(player_clock.period_time_left/1000)
+        let low_warning="";
+        if(period_sec_left < 10) {
+			if((period_sec_left % 2 == 0) && (color === 'black')) {
+              low_warning='overtime-low-black';
+			} else {
+              low_warning='overtime-low-white';
+			}
+        }
+
         let clock_className = 'Clock ' + color;
+        clock_className += ' ' + low_warning;
         if (clock.pause_state) {
             if (time_control.speed === 'correspondence') {
                 clock_className += ' paused-correspondence';
@@ -77,7 +91,7 @@ export function Clock({goban, color, className, compact}:{goban:Goban, color:clo
         }
 
         return (
-            <span className={clock_className}>
+            <span className={clock_className} >
                 {player_clock.main_time > 0 &&
                     <span className='main-time boxed'>{prettyTime(player_clock.main_time)}</span>
                 }
